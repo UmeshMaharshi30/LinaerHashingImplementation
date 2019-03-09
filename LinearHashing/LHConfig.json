@@ -1,0 +1,14 @@
+{
+ "fileName": "MyLHFile",
+ "storageFolder": "DataBase",
+ "homePage":"-1", 
+ "pageSize": 1024,
+ "totalPages": 300,
+ "lTopFile" : "lTopFile.json",
+ "M": 3, 
+ "sP": 0,
+ "NumOfPages": 3, 
+ "ACL_Min": 1.25,  
+ "ACL_Max": 1.50,  
+ "ACL": 0.0
+ }
