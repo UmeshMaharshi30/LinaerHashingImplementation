@@ -1,7 +1,7 @@
 package utilities;
 
 public class LHConfig {
-	private String FileName;
+	private String fileName;
 	private String storageFolder;
 	private int pageSize;
 	private int totalPages;
@@ -15,10 +15,10 @@ public class LHConfig {
 	private double acl;
 	
 	public String getFileName() {
-		return FileName;
+		return fileName;
 	}
 	public void setFileName(String fileName) {
-		FileName = fileName;
+		fileName = fileName;
 	}
 	
 	public String getStorageDir() {
@@ -91,7 +91,7 @@ public class LHConfig {
 	@Override
 	public String toString() {
 		String res = "";
-		res = "{ \"FileName\" : " + this.FileName + ",";
+		res = "{ \"FileName\" : " + this.fileName + ",";
 		res += "\"homePage\" : " + this.homePage + ",";
 		res += "\"storageFolder\" : " + this.storageFolder + ",";
 		res += "\"PageSize\" : " + this.pageSize + ",";

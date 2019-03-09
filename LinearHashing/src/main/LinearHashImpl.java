@@ -13,6 +13,10 @@ import com.google.gson.GsonBuilder;
 import impl.PBStorageHelper;
 import utilities.LHConfig;
 
+/**
+ * @author umesh
+ *
+ */
 public class LinearHashImpl {
 	
 	public LHConfig LHConfiguration;
@@ -37,6 +41,9 @@ public class LinearHashImpl {
 	}
 	
 	
+	/**
+	 * @param impl LinearHash Object Containing all the configurations
+	 */
 	private void startMagic(LinearHashImpl impl) {
 		// TODO Auto-generated method stub
 		PBStorageHelper helper = new PBStorageHelper(impl);
@@ -46,6 +53,9 @@ public class LinearHashImpl {
 	}
 
 
+	/**
+	 * @return Will Read/Create Linear Hash Configuration and store it in LHConfig variable
+	 */
 	private LHConfig fetchConfigFile() {
 		String path = "LHConfig.json";
         BufferedReader bufferedReader;
@@ -79,6 +89,9 @@ public class LinearHashImpl {
 		return null;
 	} 
 	
+	/**
+	 * @param map Will update and write the LHConfig file to disk
+	 */
 	public void updateLToPMap(long[] map) { 
 		try (Writer writer = new FileWriter(LHConfiguration.getLtoP_File())) {
 		    Gson gson = new GsonBuilder().create();
