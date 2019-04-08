@@ -1,6 +1,7 @@
 package main;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,6 +16,7 @@ import impl.InsertTupleIntoStorage;
 import impl.PBStorageHelper;
 import impl.PTCHelper;
 import impl.RecordIterator;
+import impl.StoragePrinter;
 import ptcFramework.ConsumerIterator;
 import ptcFramework.PTCFramework;
 import ptcFramework.ProducerIterator;
@@ -72,11 +74,10 @@ public class LinearHashImpl {
 				break;
 			case 3:
 				System.out.println("Loading and reading");
+				StoragePrinter printer = new StoragePrinter();
+				printer.printAllChains();
 				break;
 			case 4:
-				System.out.println("Deallocating Storage");
-				break;
-			case 5:
 				System.out.println("Exiting the program");		
 				System.exit(0);
 				break;
@@ -93,7 +94,7 @@ public class LinearHashImpl {
 		System.out.println("Use the userConfig.json to enter all the user inputs");
 		System.out.println("List of commands available :");
 		System.out.println("Enter the index corresponding command");
-		String[] commands = new String[] { "Create Storage", "Load and Write", "Load and Read", "Deallocate Storage", "Exit"};
+		String[] commands = new String[] { "Create Storage", "Load and Write", "Load and Read", "Exit"};
 		for(int i = 0; i < commands.length; i++) { 
 			System.out.println(commands[i] + " : " + (i + 1));
 		}

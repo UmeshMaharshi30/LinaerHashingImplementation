@@ -21,8 +21,8 @@ public class PTCHelper extends PTCFramework<byte [], byte []> {
 			while(producerIterator.hasNext()) { 
 				byte[] record = producerIterator.next();
 				Employee employee = new Employee(record);
-				System.out.println(employee);
-				consumerIterator.next(employee.getByteArray());
+				//System.out.println(employee);
+				consumerIterator.next(employee.getByteArray(), employee.getId());
 			}
 			producerIterator.close();
 			consumerIterator.close();

@@ -13,6 +13,8 @@ public class LHConfig {
 	private double ACL_MIN;
 	private double ACL_MAX;
 	private double acl;
+	private int recordSize;
+	private int MAX_RECORDS_PER_PAGE;
 	
 	public String getFileName() {
 		return fileName;
@@ -88,6 +90,18 @@ public class LHConfig {
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
 	}
+	public int getMAX_RECORDS_PER_PAGE() {
+		return MAX_RECORDS_PER_PAGE;
+	}
+	public void setMAX_RECORDS_PER_PAGE(int mAX_RECORDS_PER_PAGE) {
+		MAX_RECORDS_PER_PAGE = mAX_RECORDS_PER_PAGE;
+	}
+	public int getRecordSize() {
+		return recordSize;
+	}
+	public void setRecordSize(int recordSize) {
+		this.recordSize = recordSize;
+	}
 	@Override
 	public String toString() {
 		String res = "";
@@ -102,7 +116,10 @@ public class LHConfig {
 		res += "\"numOfPages\" : " + this.CurrentNumOfPages + ",";
 		res += "\"ACL_MIN\" : " + this.ACL_MIN + ",";
 		res += "\"ACL_MAX\" : " + this.ACL_MAX + ",";
-		res += "\"acl\" : " + this.acl + "}";
+		res += "\"acl\" : " + this.acl + ",";
+		res += "\"Total Pages \" :" + this.totalPages + ",";
+		res += "\"Max record Per Page \" :" + this.MAX_RECORDS_PER_PAGE + ",";
+		res += "\"Record size\" :" + this.recordSize + "}";
 		return res;
 	}
 	

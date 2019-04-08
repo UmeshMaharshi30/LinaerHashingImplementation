@@ -44,6 +44,17 @@ public class Employee {
 		this.salary = ByteBuffer.allocate(salarySize).putInt(salary).array();
 	}
 	
+	public Employee(byte[] bytes, int size) { 
+		this.id = new byte[idSize];
+		this.name = new byte[nameSize];
+		this.department = new byte[deptSize];
+		this.salary = new byte[salarySize];
+		for(int i = 0; i < idSize; i++) this.id[i] = bytes[i];
+		for(int i = 0; i < nameSize; i++) this.name[i] = bytes[i + idSize];
+		for(int i = 0; i < deptSize; i++) this.department[i] = bytes[i + 34];
+		for(int i = 0; i < salarySize; i++) this.salary[i] = bytes[i + 38];
+	}
+	
 	public byte[] getByteArray() { 
 		byte[] recordBytes = new byte[42];
 		for(int i = 0; i < 4; i++) { 
@@ -71,4 +82,6 @@ public class Employee {
 		res += "}";
 		return res;
 	}
+	
+	public int getId() { return ByteBuffer.wrap(this.id).getInt();}
 }

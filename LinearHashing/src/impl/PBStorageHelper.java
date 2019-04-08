@@ -9,10 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import PBStorage.PBStorage;
 
@@ -106,8 +108,13 @@ public class PBStorageHelper {
 			LHConfig lhConfig = fetchConfigFile();
 			lhConfig.setTotalPages(userInput.getTotalPages());
 			lhConfig.setPageSize(userInput.getPageSize());
-			lhConfig.setStorageDir(userInput.getStorageFolder());			
-			lhConfig = fetchConfigFile();
+			lhConfig.setStorageDir(userInput.getStorageFolder());	
+			lhConfig.setCurrentNumOfPages(0);
+			lhConfig.setACL(0.0);
+			lhConfig.setsP(0);
+			lhConfig.setM(3);
+			//updateLHConfigFile(lhConfig);
+			//lhConfig = fetchConfigFile();
 			pbStorage.CreateStorage(userInput.getStorageFolder(), userInput.getPageSize(), userInput.getTotalPages());
 			lToPMap = new HashMap<Integer, Integer>();
 			for(int i = 0; i < lhConfig.getM(); i++) { 
@@ -129,10 +136,11 @@ public class PBStorageHelper {
 		try {
 			bufferedReader = new BufferedReader(new FileReader(path));
 			Gson gson = new Gson();
-			@SuppressWarnings("unchecked")
-			HashMap<Integer, Integer> map = (HashMap<Integer, Integer>)gson.fromJson(bufferedReader, HashMap.class);
-	        System.out.println("Reading from previous LToPMap file");
-	        return map;
+			//HashMap<Integer, Integer> map = (HashMap<Integer, Integer>)gson.fromJson(bufferedReader, HashMap.class);
+			Type type = new TypeToken<HashMap<Integer, Integer>>(){}.getType();
+	        HashMap<Integer, Integer> clonedMap = gson.fromJson(bufferedReader, type);
+			System.out.println("Reading from previous LToPMap file");
+	        return clonedMap;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("File is not found");
@@ -143,7 +151,7 @@ public class PBStorageHelper {
 	/**
 	 * @param map Will update and write the LHConfig file to disk
 	 */
-	public void updateLToPMap(LHConfig lhConfig, HashMap<Integer, Integer> map) { 
+	public static void updateLToPMap(LHConfig lhConfig, HashMap<Integer, Integer> map) { 
 		try (Writer writer = new FileWriter(lhConfig.getLtoP_File())) {
 		    Gson gson = new GsonBuilder().create();
 		    gson.toJson(map, writer);
