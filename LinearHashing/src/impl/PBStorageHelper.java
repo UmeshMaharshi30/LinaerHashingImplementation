@@ -1,6 +1,5 @@
 package impl;
 
-import main.LinearHashImpl;
 import utilities.LHConfig;
 import utilities.UserInput;
 
@@ -18,56 +17,22 @@ import com.google.gson.reflect.TypeToken;
 
 import PBStorage.PBStorage;
 
-/**
- * @author umesh
- *
- */
-/**
- * @author umesh
- *
- */
+
 /**
  * @author umesh
  *
  */
 public class PBStorageHelper {
-	private LinearHashImpl hashImpl;
 	private LHConfig LHConfiguration;
 	private PBStorage pbStorage = new PBStorage();
 	private int currentPageCount = 0;
-	private int numberOfPages;
-	private int sizeOfPage;
-	
 	static HashMap<Integer, Integer> lToPMap; 
 	static String LinearConfigFile = "LHConfig.json";
-	
-	/*
-	public PBStorageHelper(LinearHashImpl impl) {
-		LHConfiguration = impl.LHConfiguration;
-		lToPMap = impl.lTopPMap;
-		numberOfPages = LHConfiguration.getTotalPages();
-		sizeOfPage = LHConfiguration.getPageSize();
-	} 
-	*/
 	
 	public PBStorageHelper() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	/*
-	public void allocateMPages() {
-		// Creating a storage based on the input params
-		try {
-			pbStorage.CreateStorage(LHConfiguration.getStorageDir(), sizeOfPage, numberOfPages);
-			while(currentPageCount < LHConfiguration.getM()) {
-				lToPMap[currentPageCount++] = pbStorage.AllocatePage();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	*/
 	
 	/**
 	 * @return Checks whether ACL 
@@ -78,31 +43,9 @@ public class PBStorageHelper {
 	
 	
 	/**
-	 * Creates a new page, add entry to the LTOP json file
+	 * @param userInput
+	 *  Using userInput configuration file creates the storage
 	 */
-	/*
-	public void addNewChain() { 
-		long[] ltopNew = new long[lToPMap.length + 1];
-		for(int i = 0; i < lToPMap.length; i++) { 
-			ltopNew[i] = lToPMap[i];
-		}
-		try {
-			ltopNew[lToPMap.length] = pbStorage.AllocatePage();
-			currentPageCount++;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	}
-	*/
-	
-	/**
-	 * Creates a new page and  
-	 */
-	public void addNewPage() { 
-		
-	}
-	
 	public void createStorage(UserInput userInput) { 
 		try {
 			LHConfig lhConfig = fetchConfigFile();
@@ -130,6 +73,10 @@ public class PBStorageHelper {
 	}
 	
 	
+	/**
+	 * @param config
+	 * @return Reads and returns the LToPMap from LToPFile
+	 */
 	public static HashMap<Integer, Integer> fetchLToPMapFromFile(LHConfig config) {
 		String path = config.getLtoP_File();
         BufferedReader bufferedReader;
@@ -149,7 +96,7 @@ public class PBStorageHelper {
 	} 
 	
 	/**
-	 * @param map Will update and write the LHConfig file to disk
+	 * @param map Will update and write the LToP Map file to disk
 	 */
 	public static void updateLToPMap(LHConfig lhConfig, HashMap<Integer, Integer> map) { 
 		try (Writer writer = new FileWriter(lhConfig.getLtoP_File())) {
@@ -180,6 +127,11 @@ public class PBStorageHelper {
 		return null;
 	}
 	
+	
+	/**
+	 * @param lhConfig
+	 *  Updates the linear hash config file
+	 */
 	public static void updateLHConfigFile(LHConfig lhConfig) { 
 		try (Writer writer = new FileWriter(LinearConfigFile)) {
 		    Gson gson = new GsonBuilder().create();
