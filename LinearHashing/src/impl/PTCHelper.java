@@ -3,6 +3,7 @@ package impl;
 import ptcFramework.ConsumerIterator;
 import ptcFramework.PTCFramework;
 import ptcFramework.ProducerIterator;
+import utilities.Employee;
 
 public class PTCHelper extends PTCFramework<byte [], byte []> {
 
@@ -19,15 +20,16 @@ public class PTCHelper extends PTCFramework<byte [], byte []> {
 			consumerIterator.open();
 			while(producerIterator.hasNext()) { 
 				byte[] record = producerIterator.next();
-				System.out.println(record.toString());
-				consumerIterator.next(record);
+				Employee employee = new Employee(record);
+				System.out.println(employee);
+				consumerIterator.next(employee.getByteArray());
 			}
 			producerIterator.close();
 			consumerIterator.close();
 			System.out.println("Finished loading and writing");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("Errow while loading and writing");
 		}
 	}
