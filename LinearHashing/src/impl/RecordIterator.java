@@ -10,7 +10,7 @@ import utilities.UserInput;
 public class RecordIterator implements ProducerIterator<byte[]> {
 	
 	private static UserInput userInput = LinearHashImpl.readUserConfig();
-	private static String recordsFileName = userInput.getDataDirectory() + File.pathSeparator + userInput.getDataFile(); 
+	private static String recordsFileName = userInput.getDataDirectory() + File.separator + userInput.getDataFile(); 
 	private static Scanner fileReader;
 	
 	@Override
@@ -28,7 +28,7 @@ public class RecordIterator implements ProducerIterator<byte[]> {
 	@Override
 	public void open() throws Exception {
 		// TODO Auto-generated method stub
-		fileReader = new Scanner(recordsFileName); 
+		fileReader = new Scanner(new File(recordsFileName)); 
 	}
 
 	@Override

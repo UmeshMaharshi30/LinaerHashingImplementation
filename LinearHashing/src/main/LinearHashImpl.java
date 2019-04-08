@@ -11,7 +11,13 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import impl.InsertTupleIntoStorage;
 import impl.PBStorageHelper;
+import impl.PTCHelper;
+import impl.RecordIterator;
+import ptcFramework.ConsumerIterator;
+import ptcFramework.PTCFramework;
+import ptcFramework.ProducerIterator;
 import utilities.LHConfig;
 import utilities.UserInput;
 
@@ -59,6 +65,10 @@ public class LinearHashImpl {
 				break;
 			case 2:
 				System.out.println("Loading and writing into Storage");
+				ProducerIterator<byte[]> recordIterator = new RecordIterator();
+				ConsumerIterator<byte[]> insertTupleIntoStorage = new InsertTupleIntoStorage();
+				PTCFramework<byte[], byte[]> ptcFramework = new PTCHelper(recordIterator, insertTupleIntoStorage);
+				ptcFramework.run();
 				break;
 			case 3:
 				System.out.println("Loading and reading");

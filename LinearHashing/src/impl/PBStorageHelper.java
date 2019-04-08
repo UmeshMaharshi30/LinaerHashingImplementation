@@ -123,13 +123,14 @@ public class PBStorageHelper {
 	}
 	
 	
-	public Long[] fetchLToPMapFromFile(LHConfig config) {
+	public static HashMap<Integer, Integer> fetchLToPMapFromFile(LHConfig config) {
 		String path = config.getLtoP_File();
         BufferedReader bufferedReader;
 		try {
 			bufferedReader = new BufferedReader(new FileReader(path));
 			Gson gson = new Gson();
-	        Long[] map = gson.fromJson(bufferedReader, Long[].class);
+			@SuppressWarnings("unchecked")
+			HashMap<Integer, Integer> map = (HashMap<Integer, Integer>)gson.fromJson(bufferedReader, HashMap.class);
 	        System.out.println("Reading from previous LToPMap file");
 	        return map;
 		} catch (FileNotFoundException e) {
