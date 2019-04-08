@@ -1,0 +1,7 @@
+{
+ "storageFolder": "DataBase",
+ "pageSize": 1024,
+ "totalPages": 400,
+ "dataDirectory" : "resource",
+ "dataFile" : "test.txt" 
+ }

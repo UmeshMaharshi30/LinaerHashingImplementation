@@ -9,7 +9,7 @@ public class LHConfig {
 	private String lTopFile;
 	private int M;
 	private int sP;
-	private int numOfPages;
+	private int CurrentNumOfPages;
 	private double ACL_MIN;
 	private double ACL_MAX;
 	private double acl;
@@ -51,11 +51,11 @@ public class LHConfig {
 	public void setsP(int sP) {
 		this.sP = sP;
 	}
-	public int getNumOfPages() {
-		return numOfPages;
+	public int getCurrentNumOfPages() {
+		return CurrentNumOfPages;
 	}
-	public void setNumOfPages(int pages) {
-		numOfPages = pages;
+	public void setCurrentNumOfPages(int pages) {
+		CurrentNumOfPages = pages;
 	}
 	public double getACL_Min() {
 		return ACL_MIN;
@@ -99,7 +99,7 @@ public class LHConfig {
 		res += "\"LtoP_File\" : " + this.lTopFile + ",";
 		res += "\"M\" : " + this.M + ",";
 		res += "\"sP\" : " + this.sP + ",";
-		res += "\"numOfPages\" : " + this.numOfPages + ",";
+		res += "\"numOfPages\" : " + this.CurrentNumOfPages + ",";
 		res += "\"ACL_MIN\" : " + this.ACL_MIN + ",";
 		res += "\"ACL_MAX\" : " + this.ACL_MAX + ",";
 		res += "\"acl\" : " + this.acl + "}";
