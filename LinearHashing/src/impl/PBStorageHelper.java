@@ -54,7 +54,7 @@ public class PBStorageHelper {
 			lhConfig.setPageSize(userInput.getPageSize());
 			lhConfig.setStorageDir(userInput.getStorageFolder());	
 			lhConfig.setCurrentNumOfPages(0);
-			lhConfig.setMAX_RECORDS_PER_PAGE(userInput.getPageSize()/lhConfig.getRecordSize());
+			lhConfig.setMAX_RECORDS_PER_PAGE(userInput.getPageSize() - 24/lhConfig.getRecordSize());
 			lhConfig.setACL(0.0);
 			lhConfig.setsP(0);
 			lhConfig.setM(3);
