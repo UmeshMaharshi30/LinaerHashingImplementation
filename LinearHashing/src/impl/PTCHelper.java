@@ -26,11 +26,11 @@ public class PTCHelper extends PTCFramework<byte [], byte []> {
 			}
 			producerIterator.close();
 			consumerIterator.close();
-			System.out.println("Finished loading and writing");
+			System.out.println("# Finished loading and writing");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("Errow while loading and writing");
+			System.out.println("# Errow while loading and writing");
 		}
 	}
 

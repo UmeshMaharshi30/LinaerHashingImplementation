@@ -21,6 +21,7 @@ import ptcFramework.ConsumerIterator;
 import ptcFramework.PTCFramework;
 import ptcFramework.ProducerIterator;
 import utilities.LHConfig;
+import utilities.Log;
 import utilities.UserInput;
 
 /**
@@ -37,31 +38,32 @@ public class LinearHashImpl {
 	public static void main(String[] args) { 
 		Scanner input = new Scanner(System.in);
 		int menuIndex = -1;
-		displayCommands();
 		while(true) { 
+			displayCommands();
 			switch (menuIndex = input.nextInt()) {
 			case 1:				
 				creatingStorageFromUserConfig();
 				break;
 			case 2:
 				loadAndWriteToStorage();
+				System.out.println("#####################################################");
 				break;
 			case 3:
 				loadAndRead();
 				break;
 			case 4:
-				System.out.println("Performing all operations inorder");		
+				System.out.println("# Performing all operations inorder");		
 				creatingStorageFromUserConfig();
 				loadAndWriteToStorage();
 				loadAndRead();
 				break;
 			case 5:
-				System.out.println("Exiting the program");		
+				System.out.println("# Exiting the program");		
 				input.close();
 				System.exit(0);
 				break;
 			default:
-				System.out.println("Invalid Command");
+				System.out.println("# Invalid Command");
 				displayCommands();
 				break;
 			}
@@ -70,13 +72,15 @@ public class LinearHashImpl {
 	
 	
 	public static void creatingStorageFromUserConfig() { 
-		System.out.println("Creating Storage based on the userinput file");
+		System.out.println("#####################################################");
+		System.out.println("# Creating Storage based on the userinput file");
 		UserInput userInput = readUserConfig();
 		pbStorageHelper.createStorage(userInput);
 	}
 	
 	public static void loadAndWriteToStorage() { 
-		System.out.println("Loading and writing into Storage");
+		System.out.println("#####################################################");
+		System.out.println("# Loading and writing into Storage");
 		ProducerIterator<byte[]> recordIterator = new RecordIterator();
 		ConsumerIterator<byte[]> insertTupleIntoStorage = new InsertTupleIntoStorage();
 		PTCFramework<byte[], byte[]> ptcFramework = new PTCHelper(recordIterator, insertTupleIntoStorage);
@@ -84,19 +88,22 @@ public class LinearHashImpl {
 	}
 	
 	public static void loadAndRead() { 
-		System.out.println("Loading and reading");
+		System.out.println("#####################################################");
+		System.out.println("# Loading and reading");
 		StoragePrinter printer = new StoragePrinter();
 		printer.printAllChains();
 	}
 	
 	public static void displayCommands() {
-		System.out.println("Use the userConfig.json to enter all the user inputs");
-		System.out.println("List of commands available :");
-		System.out.println("Enter the index corresponding command");
+		Log.i("#####################################################");
+		Log.i("# Use the userConfig.json to enter all the user inputs");
+		Log.i("# List of commands available :");
+		Log.i("# Enter the index corresponding command");
 		String[] commands = new String[] { "Create Storage", "Load and Write", "Load and Read", "Run Everything ", "Exit"};
 		for(int i = 0; i < commands.length; i++) { 
-			System.out.println(commands[i] + " : " + (i + 1));
+			Log.i("# " + commands[i] + " : " + (i + 1));
 		}
+		Log.i("#####################################################");
 	}
 	
 	

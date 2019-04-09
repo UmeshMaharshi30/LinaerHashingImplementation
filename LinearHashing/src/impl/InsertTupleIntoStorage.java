@@ -58,7 +58,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 		int chainHead = getChainAddress(id);
 		int pageAddress = canInsertRecord(chainHead);
 		// -1 : new page has to be created else add to existing page
-		System.out.println("Can insertRecord " + pageAddress);
+		// System.out.println("Can insertRecord " + pageAddress);
 		if(pageAddress >= 0) { 
 			byte[] page = new byte[linearHashConfig.getPageSize()];
 			pbStorage.ReadPage(pageAddress, page);
@@ -66,7 +66,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			for(int i = 0; i < 4; i++) recordsCountArr[i] = page[i];
 			int recordsCount = ByteBuffer.wrap(recordsCountArr).getInt();
 			int offSet = 24 + (recordsCount * linearHashConfig.getRecordSize());
-			System.out.println("Current Number of Records : " + recordsCount + " Offset " + offSet);
+			// System.out.println("Current Number of Records : " + recordsCount + " Offset " + offSet);
 			for(int i = 0; i < c.length; i++) { 
 				page[i + offSet] = c[i];
 			}
@@ -78,17 +78,20 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			for(int i = 0; i < 4; i++) { 
 				recordsCountArr[i] = page[i];
 			}
-			System.out.println("Incrementing Number of Records : " + ByteBuffer.wrap(recordsCountArr).getInt());
+			//System.out.println("Incrementing Number of Records : " + ByteBuffer.wrap(recordsCountArr).getInt());
 			pbStorage.WritePage(pageAddress, page);
 		} else { 
 			if(!haveToSplit()) { 
+				System.out.println("# Creating a new page with out splitting");
 				int newPageAddress = pbStorage.AllocatePage();
+				updateNextPageAddress(newPageAddress, -1);
 				int getLastPageInChain = getLastPageInChain(chainHead);
-				System.out.println("Last Page in the Chain " + getLastPageInChain);
+				//System.out.println("Last Page in the Chain " + getLastPageInChain);
 				updateNextPageAddress(getLastPageInChain, newPageAddress);
 				next(c, id);
 				linearHashConfig.setCurrentNumOfPages(linearHashConfig.getCurrentNumOfPages() + 1);
 			} else { 
+				System.out.println("# Creating a new page with splitting");
 				splitTheChain(linearHashConfig.getsP());
 				next(c, id);
 			}
@@ -101,23 +104,25 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 	 * Splits the chain, reinserts all the records in the chain
 	 */
 	public void splitTheChain(int chainHead) { 
-		System.out.println("Spliting the Chain " + chainHead);
+		System.out.println("# Spliting the Chain " + chainHead);
 		List<Integer> pagesToDeallocate = new ArrayList<Integer>();
 		List<byte[]> recordsToReInsert = new ArrayList<byte[]>();
 		insertRecordBytesToArray(chainHead, recordsToReInsert, pagesToDeallocate);
 		for(int pageId : pagesToDeallocate) { 
-			System.out.println("Deallocating the Chain " + pageId);
+			System.out.println("# Deallocating the Chain " + pageId);
 			deallocatePage(pageId);
 			linearHashConfig.setCurrentNumOfPages(linearHashConfig.getCurrentNumOfPages() - 1);
 		}
 		try {
 			int newChainHead = pbStorage.AllocatePage();
+			updateNextPageAddress(newChainHead, -1);
 			lToPMap.put(chainHead, newChainHead);
 			linearHashConfig.setCurrentNumOfPages(linearHashConfig.getCurrentNumOfPages() + 1);
 			int previousM = linearHashConfig.getM();
 			for(int i = previousM; i < 2*previousM; i++) { 
 				lToPMap.put(i, pbStorage.AllocatePage());
-				System.out.println(i + " " + lToPMap.get(i));
+				//System.out.println(i + " " + lToPMap.get(i));
+				updateNextPageAddress(lToPMap.get(i), -1);
 				linearHashConfig.setCurrentNumOfPages(linearHashConfig.getCurrentNumOfPages() + 1);
 			}
 			linearHashConfig.setM(linearHashConfig.getM() * 2);
@@ -177,7 +182,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			}
 			recordsList.add(record);
 		}
-		if(nextPageAddress != 0) insertRecordBytesToArray(nextPageAddress, recordsList, pagesToDeallocate);
+		if(nextPageAddress != -1) insertRecordBytesToArray(nextPageAddress, recordsList, pagesToDeallocate);
 	}
 	
 	
@@ -200,7 +205,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 		byte[] recordsCountArr = new byte[4];
 		for(int i = 0; i < 4; i++) recordsCountArr[i] = page[i];
 		int recordsCount = ByteBuffer.wrap(recordsCountArr).getInt();
-		System.out.println("Records Count in Page : " + recordsCount + " page address " + pageAddress + " Next Page " + nextPageAddress);
+		//System.out.println("Records Count in Page : " + recordsCount + " page address " + pageAddress + " Next Page " + nextPageAddress);
 		/*
 		try {
 			System.in.read();
@@ -209,7 +214,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			e.printStackTrace();
 		}
 		*/
-		if(recordsCount <=  linearHashConfig.getMAX_RECORDS_PER_PAGE() || (recordsCount == linearHashConfig.getMAX_RECORDS_PER_PAGE() && nextPageAddress == 0)) return pageAddress;
+		if(recordsCount <=  linearHashConfig.getMAX_RECORDS_PER_PAGE() || (recordsCount == linearHashConfig.getMAX_RECORDS_PER_PAGE() && nextPageAddress == -1)) return pageAddress;
 		else return getLastPageInChain(nextPageAddress);
 		//return recordsCount == linearHashConfig.getMAX_RECORDS_PER_PAGE() && nextPageAddress == 0 && recordsCount != 0 ? pageAddress : getLastPageInChain(nextPageAddress);
 	}
@@ -221,7 +226,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 	 * 
 	 * Updates the next page bytes with the given next page address
 	 */
-	public void updateNextPageAddress(int pageToBeUpdated, int nextPageAddress) { 
+	public static void updateNextPageAddress(int pageToBeUpdated, int nextPageAddress) { 
 		byte[] page = new byte[linearHashConfig.getPageSize()];
 		try {
 			pbStorage.ReadPage(pageToBeUpdated, page);
@@ -258,7 +263,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			for(int i = 0; i < 4; i++) recordsCountArr[i] = page[i];
 			int recordsCount = ByteBuffer.wrap(recordsCountArr).getInt();
 			//System.out.println("Records persent in the page " + recordsCount + " Page Address " + nextPageAddress);
-			if(nextPageAddress == 0) { 
+			if(nextPageAddress == -1) { 
 				if(recordsCount < linearHashConfig.getMAX_RECORDS_PER_PAGE()) return pageAddress;
 				else return -1;
 			} else return canInsertRecord(nextPageAddress);
@@ -277,7 +282,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 	public int getChainAddress(int id) { 
 		int chainIndex = id % (linearHashConfig.getM());
 		if(lToPMap == null) System.out.println("L to p map is null");
-		System.out.println("id " + id + " Chain Index " + chainIndex + " Page Address " + lToPMap.get(chainIndex));
+		//System.out.println("id " + id + " Chain Index " + chainIndex + " Page Address " + lToPMap.get(chainIndex));
 		return (lToPMap.get(chainIndex));
 	}
 

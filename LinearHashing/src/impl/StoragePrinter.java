@@ -28,9 +28,9 @@ public class StoragePrinter {
 	}
 	
 	public void printAllChains() { 
-		System.out.println("Printing All Chains ");
+		System.out.println("# Printing All Chains ");
 		for(int c :  lToPMap.keySet()) { 
-			System.out.println("Printing Chain " + c + " Chain Address " + lToPMap.get(c));
+			//System.out.println("Printing Chain " + c + " Chain Address " + lToPMap.get(c));
 			currentChain = c;
 			printChain(lToPMap.get(c));
 		}
@@ -51,7 +51,7 @@ public class StoragePrinter {
 		byte[] recordsCountArr = new byte[4];
 		for(int i = 0; i < 4; i++) recordsCountArr[i] = page[i];
 		int recordsCount = ByteBuffer.wrap(recordsCountArr).getInt();
-		System.out.println("Page id " + chainHead + " next page " + nextPageAddress + " records counts " + recordsCount);
+		// System.out.println("Page id " + chainHead + " next page " + nextPageAddress + " records counts " + recordsCount);
 		recordsCountsInEachPage.put(chainHead, recordsCount);
 		recordsInEachChain[currentChain] += recordsCount;
 		totalRecords += recordsCount;
@@ -60,21 +60,24 @@ public class StoragePrinter {
 			for(int j = 0; j < 42; j++) { 
 				record[j] = page[i + j];
 			}
-			System.out.println(new Employee(record, 42).toString());
+			//System.out.println(new Employee(record, 42).toString());
 		}
-		if(nextPageAddress != 0) printChain(nextPageAddress);
+		if(nextPageAddress != -1) printChain(nextPageAddress);
 	}
 	
 	public void printStats() { 
-		System.out.println("Records in Each Page");
+		System.out.println("#####################################################");
+		System.out.println("# Records in Each Page");
 		for(int pageAdd : recordsCountsInEachPage.keySet()) { 
-			System.out.println(pageAdd + " " + recordsCountsInEachPage.get(pageAdd));
+			System.out.println("# " + pageAdd + " " + recordsCountsInEachPage.get(pageAdd));
 		}
-		System.out.println("Records in Each Chain");
+		System.out.println("#####################################################");
+		System.out.println("# Records in Each Chain");
 		for(int i = 0; i < recordsInEachChain.length; i++) { 
-			System.out.println("Chain no " + i + " " + recordsInEachChain[i]);
+			System.out.println("# Chain no " + i + " " + recordsInEachChain[i]);
 		}
-		System.out.println("Total no of records " + totalRecords);
+		System.out.println("# Total no of records " + totalRecords);
+		System.out.println("#####################################################");
 	}
 	
 	public StoragePrinter(LHConfig config) { 

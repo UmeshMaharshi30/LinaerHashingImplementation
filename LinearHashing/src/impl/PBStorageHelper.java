@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
@@ -62,6 +63,7 @@ public class PBStorageHelper {
 			lToPMap = new HashMap<Integer, Integer>();
 			for(int i = 0; i < lhConfig.getM(); i++) { 
 				lToPMap.put(i, pbStorage.AllocatePage());
+				updateNextPageAddress(lToPMap.get(i), -1, lhConfig, pbStorage);
 				lhConfig.setCurrentNumOfPages(i + 1);
 			}
 			updateLHConfigFile(lhConfig);
@@ -71,6 +73,23 @@ public class PBStorageHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static void updateNextPageAddress(int pageToBeUpdated, int nextPageAddress, LHConfig linearHashConfig, PBStorage pbStorage) { 
+		byte[] page = new byte[linearHashConfig.getPageSize()];
+		try {
+			pbStorage.ReadPage(pageToBeUpdated, page);
+			byte[] nextPageByteArr = ByteBuffer.allocate(4).putInt(nextPageAddress).array();
+			for(int i = 0; i < 4; i++) { 
+				page[i + 4] = nextPageByteArr[i];
+			}
+			pbStorage.WritePage(pageToBeUpdated, page);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	/**
@@ -86,7 +105,7 @@ public class PBStorageHelper {
 			//HashMap<Integer, Integer> map = (HashMap<Integer, Integer>)gson.fromJson(bufferedReader, HashMap.class);
 			Type type = new TypeToken<HashMap<Integer, Integer>>(){}.getType();
 	        HashMap<Integer, Integer> clonedMap = gson.fromJson(bufferedReader, type);
-			System.out.println("Reading from previous LToPMap file");
+			//System.out.println("# Reading from previous LToPMap file");
 	        return clonedMap;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -102,10 +121,10 @@ public class PBStorageHelper {
 		try (Writer writer = new FileWriter(lhConfig.getLtoP_File())) {
 		    Gson gson = new GsonBuilder().create();
 		    gson.toJson(map, writer);
-		    System.out.println("Successfully Updated LtoP file");
+		    System.out.println("# Successfully Updated LtoP file");
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("Error while writing LtoPMap !");
+			System.out.println("# Error while writing LtoPMap !");
 		}
 	}
 	
@@ -122,7 +141,7 @@ public class PBStorageHelper {
 	        return config;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			System.out.println("File is not found");
+			System.out.println("# File is not found");
 		}
 		return null;
 	}
@@ -133,13 +152,14 @@ public class PBStorageHelper {
 	 *  Updates the linear hash config file
 	 */
 	public static void updateLHConfigFile(LHConfig lhConfig) { 
+		lhConfig.setACL(((1.0 * lhConfig.getCurrentNumOfPages()))/(lhConfig.getM() + lhConfig.getsP()));
 		try (Writer writer = new FileWriter(LinearConfigFile)) {
 		    Gson gson = new GsonBuilder().create();
 		    gson.toJson(lhConfig, writer);
-		    System.out.println("Successfully Updated LHConfig file");
+		    System.out.println("# Successfully Updated LHConfig file");
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("Error while writing LtoPMap !");
+			System.out.println("# Error while writing LtoPMap !");
 		}
 	}
 	
