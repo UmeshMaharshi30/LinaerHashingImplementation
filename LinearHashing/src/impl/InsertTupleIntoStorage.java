@@ -214,7 +214,7 @@ public class InsertTupleIntoStorage implements ConsumerIterator<byte[]> {
 			e.printStackTrace();
 		}
 		*/
-		if(recordsCount <=  linearHashConfig.getMAX_RECORDS_PER_PAGE() || (recordsCount == linearHashConfig.getMAX_RECORDS_PER_PAGE() && nextPageAddress == -1)) return pageAddress;
+		if(nextPageAddress == -1) return pageAddress;
 		else return getLastPageInChain(nextPageAddress);
 		//return recordsCount == linearHashConfig.getMAX_RECORDS_PER_PAGE() && nextPageAddress == 0 && recordsCount != 0 ? pageAddress : getLastPageInChain(nextPageAddress);
 	}
