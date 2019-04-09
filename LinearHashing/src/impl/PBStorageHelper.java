@@ -54,7 +54,7 @@ public class PBStorageHelper {
 			lhConfig.setPageSize(userInput.getPageSize());
 			lhConfig.setStorageDir(userInput.getStorageFolder());	
 			lhConfig.setCurrentNumOfPages(0);
-			lhConfig.setMAX_RECORDS_PER_PAGE(userInput.getPageSize() - 24/lhConfig.getRecordSize());
+			lhConfig.setMAX_RECORDS_PER_PAGE((userInput.getPageSize() - 24)/lhConfig.getRecordSize());
 			lhConfig.setACL(0.0);
 			lhConfig.setsP(0);
 			lhConfig.setM(3);
@@ -81,8 +81,12 @@ public class PBStorageHelper {
 		try {
 			pbStorage.ReadPage(pageToBeUpdated, page);
 			byte[] nextPageByteArr = ByteBuffer.allocate(4).putInt(nextPageAddress).array();
+			byte[] recordCountArr = ByteBuffer.allocate(4).putInt(0).array();
 			for(int i = 0; i < 4; i++) { 
 				page[i + 4] = nextPageByteArr[i];
+			}
+			for(int i = 0; i < 4; i++) { 
+				page[i] = recordCountArr[i];
 			}
 			pbStorage.WritePage(pageToBeUpdated, page);
 		} catch (Exception e) {
