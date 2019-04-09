@@ -1,6 +1,6 @@
 {
  "storageFolder": "DataBase",
- "pageSize": 1024,
+ "pageSize": 2048,
  "totalPages": 400,
  "dataDirectory" : "input",
  "dataFile" : "Emp.txt" 

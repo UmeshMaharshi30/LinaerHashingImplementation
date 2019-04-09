@@ -1,1 +1,1 @@
-{"fileName":"MyLHFile","storageFolder":"DataBase","pageSize":1024,"totalPages":400,"homePage":"-1","lTopFile":"lTopFile.json","M":192,"sP":6,"CurrentNumOfPages":249,"ACL_MIN":1.25,"ACL_MAX":1.5,"acl":1.2575757575757576,"recordSize":42,"MAX_RECORDS_PER_PAGE":2}
+{"fileName":"MyLHFile","storageFolder":"DataBase","pageSize":2048,"totalPages":400,"homePage":"-1","lTopFile":"lTopFile.json","M":6,"sP":1,"CurrentNumOfPages":9,"ACL_MIN":1.25,"ACL_MAX":1.5,"acl":1.2857142857142858,"recordSize":42,"MAX_RECORDS_PER_PAGE":48}
